@@ -15,35 +15,32 @@ class BankAccountTest(unittest.TestCase):
         self.assertEqual(account.get_balance(), 0)
 
     def test_can_deposit_money(self):
-        account = BankAccount()
-        account.open()
-
-        account.deposit(100)
+        account = self._create_account(amount=100)
 
         self.assertEqual(account.get_balance(), 100)
 
     def test_can_deposit_money_sequentially(self):
-        account = BankAccount()
-        account.open()
-
-        account.deposit(100)
+        account = self._create_account(amount=100)
         account.deposit(50)
 
         self.assertEqual(account.get_balance(), 150)
 
     def test_can_withdraw_money(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(100)
+        account = self._create_account(amount=100)
 
         account.withdraw(50)
 
         self.assertEqual(account.get_balance(), 50)
 
+    def test_can_empty_bank_account(self):
+        account = self._create_account(amount=100)
+
+        account.withdraw(100)
+
+        self.assertEqual(account.get_balance(), 0)
+
     def test_can_withdraw_money_sequentially(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(100)
+        account = self._create_account(amount=100)
 
         account.withdraw(20)
         account.withdraw(70)
@@ -89,25 +86,21 @@ class BankAccountTest(unittest.TestCase):
             account.open()
 
     def test_reopened_account_does_not_retain_balance(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(50)
+        account = self._create_account(amount=50)
         account.close()
+
         account.open()
+
         self.assertEqual(account.get_balance(), 0)
 
     def test_cannot_withdraw_more_than_deposited(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(25)
+        account = self._create_account(amount=25)
 
         with self.assertRaises(ValueError):
             account.withdraw(50)
 
     def test_cannot_withdraw_negative(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(100)
+        account = self._create_account(amount=100)
 
         with self.assertRaisesWithMessage(ValueError):
             account.withdraw(-50)
@@ -120,15 +113,15 @@ class BankAccountTest(unittest.TestCase):
             account.deposit(-50)
 
     def test_can_handle_concurrent_transactions(self):
-        account = BankAccount()
-        account.open()
-        account.deposit(1000)
+        account = self._create_account(amount=100)
 
-        self.adjust_balance_concurrently(account)
+        self._adjust_balance_concurrently(account)
 
-        self.assertEqual(account.get_balance(), 1000)
+        self.assertEqual(account.get_balance(), 100)
 
-    def adjust_balance_concurrently(self, account):
+    # Utility functions
+    @staticmethod
+    def _adjust_balance_concurrently(account):
         def transact():
             account.deposit(5)
             time.sleep(0.001)
@@ -148,9 +141,15 @@ class BankAccountTest(unittest.TestCase):
         for thread in threads:
             thread.join()
 
-    # Utility functions
     def assertRaisesWithMessage(self, exception):
         return self.assertRaisesRegex(exception, r".+")
+
+    @staticmethod
+    def _create_account(amount):
+        account = BankAccount()
+        account.open()
+        account.deposit(amount)
+        return account
 
 
 if __name__ == '__main__':

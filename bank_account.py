@@ -24,7 +24,7 @@ class BankAccount:
     def withdraw(self, amount):
         self._require_opened()
         self._require_positive_transaction_amount(amount)
-        if self._balance <= amount:
+        if self._balance < amount:
             raise ValueError('Cannot overdraw account')
         self._change_balance(-amount)
 
