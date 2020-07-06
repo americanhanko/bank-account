@@ -9,3 +9,4 @@
 - [ ] Meet FDIC compliance
 - [ ] Support transferring between two bank accounts
 - [ ] Currencies
+- [ ] Remove comments from test suite

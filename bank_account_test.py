@@ -119,6 +119,18 @@ class BankAccountTest(unittest.TestCase):
 
         self.assertEqual(account.get_balance(), 100)
 
+    def test_can_handle_initial_dollar_amount(self):
+        account = BankAccount()
+
+        account.open(amount=50)
+
+        self.assertEqual(account.get_balance(), 50)
+
+    def test_able_to_open_account_with_minimum_required_balance(self):
+        account = BankAccount(minimum_balance=100)
+
+        self.assertEqual(account.minimum_balance, 100)
+
     # Utility functions
     @staticmethod
     def _adjust_balance_concurrently(account):

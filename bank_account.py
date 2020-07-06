@@ -2,19 +2,25 @@ import threading
 
 
 class BankAccount:
-    def __init__(self):
+    def __init__(self, minimum_balance=0):
+        self._minimum_balance = minimum_balance
         self._balance = 0
         self._opened = False
         self._lock = threading.Lock()
+
+    @property
+    def minimum_balance(self):
+        return self._minimum_balance
 
     def get_balance(self):
         self._require_opened()
         return self._balance
 
-    def open(self):
+    def open(self, amount=0):
         if self._opened:
             raise ValueError('Account already opened')
         self._opened = True
+        self._balance = amount
 
     def deposit(self, amount):
         self._require_opened()
@@ -28,7 +34,8 @@ class BankAccount:
             raise ValueError('Cannot overdraw account')
         self._change_balance(-amount)
 
-    def _require_positive_transaction_amount(self, amount):
+    @staticmethod
+    def _require_positive_transaction_amount(amount):
         if amount < 0:
             raise ValueError('Cannot withdraw negative amount')
 
