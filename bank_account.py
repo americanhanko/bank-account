@@ -19,6 +19,8 @@ class BankAccount:
     def open(self, amount=0):
         if self._opened:
             raise ValueError('Account already opened')
+        if amount < self.minimum_balance:
+            raise ValueError('Opening requires at least minimum balance of 100')
         self._opened = True
         self._balance = amount
 
