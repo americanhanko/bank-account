@@ -3,6 +3,8 @@ import threading
 
 class BankAccount:
     def __init__(self, minimum_balance=0):
+        if minimum_balance < 0:
+            raise ValueError('Minimum balance must be at least zero')
         self._minimum_balance = minimum_balance
         self._balance = 0
         self._opened = False
@@ -20,7 +22,7 @@ class BankAccount:
         if self._opened:
             raise ValueError('Account already opened')
         if amount < self.minimum_balance:
-            raise ValueError('Opening requires at least minimum balance of 100')
+            raise ValueError(f'Opening requires at least minimum balance of {self.minimum_balance}')
         self._opened = True
         self._balance = amount
 

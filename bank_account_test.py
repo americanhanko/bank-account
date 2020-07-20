@@ -167,10 +167,17 @@ class BankAccountTest(unittest.TestCase):
 
 
 @pytest.mark.parametrize('minimum_balance,amount', [
-    (100, 50)
+    (100, 50),
+    (50, 0),
+    (1, 0)
 ])
 def test_cannot_open_account_with_less_than_minimum_balance(minimum_balance, amount):
     account = BankAccount(minimum_balance=minimum_balance)
 
     with pytest.raises(ValueError, match=f'Opening requires at least minimum balance of {minimum_balance}'):
         account.open(amount=amount)
+
+
+def test_account_requires_minimum_balance_of_at_least_zero():
+    with pytest.raises(ValueError, match='Minimum balance must be at least zero'):
+        BankAccount(minimum_balance=-15)
