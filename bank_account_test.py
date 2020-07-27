@@ -156,7 +156,7 @@ class BankAccountTest(unittest.TestCase):
             thread.join()
 
     def assertRaisesWithMessage(self, exception):
-        return self.assertRaisesRegex(exception, r'.+')
+        return self.assertRaisesRegex(exception, r".+")
 
     @staticmethod
     def _create_account(amount):
@@ -166,18 +166,24 @@ class BankAccountTest(unittest.TestCase):
         return account
 
 
-@pytest.mark.parametrize('minimum_balance,amount', [
-    (100, 50),
-    (50, 0),
-    (1, 0)
-])
+@pytest.mark.parametrize("minimum_balance,amount", [(100, 50), (50, 0), (1, 0)])
 def test_cannot_open_account_with_less_than_minimum_balance(minimum_balance, amount):
     account = BankAccount(minimum_balance=minimum_balance)
 
-    with pytest.raises(ValueError, match=f'Opening requires at least minimum balance of {minimum_balance}'):
+    with pytest.raises(
+        ValueError,
+        match=f"Opening requires at least minimum balance of {minimum_balance}",
+    ):
         account.open(amount=amount)
 
 
 def test_account_requires_minimum_balance_of_at_least_zero():
-    with pytest.raises(ValueError, match='Minimum balance must be at least zero'):
+    with pytest.raises(ValueError, match="Minimum balance must be at least zero"):
         BankAccount(minimum_balance=-15)
+
+def test_withdraw_below_minimum_balance_raises():
+    account = BankAccount(minimum_balance=1)
+    account.open(amount=3)
+
+    with pytest.raises(ValueError, match="Cannot withdraw below minimum required balance of 1. You can withdraw a maximum of 2."):
+        account.withdraw(amount=3)
