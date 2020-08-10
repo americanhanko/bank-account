@@ -10,3 +10,4 @@
 - [ ] Support transferring between two bank accounts
 - [ ] Currencies
 - [ ] Remove comments from test suite
+- [ ] Account persistence
