@@ -14,32 +14,32 @@ class BankAccountTest(unittest.TestCase):
 
         account.open()
 
-        self.assertEqual(account.get_balance(), 0)
+        self.assertEqual(account.balance, 0)
 
     def test_can_deposit_money(self):
         account = self._create_account(amount=100)
 
-        self.assertEqual(account.get_balance(), 100)
+        self.assertEqual(account.balance, 100)
 
     def test_can_deposit_money_sequentially(self):
         account = self._create_account(amount=100)
         account.deposit(50)
 
-        self.assertEqual(account.get_balance(), 150)
+        self.assertEqual(account.balance, 150)
 
     def test_can_withdraw_money(self):
         account = self._create_account(amount=100)
 
         account.withdraw(50)
 
-        self.assertEqual(account.get_balance(), 50)
+        self.assertEqual(account.balance, 50)
 
     def test_can_empty_bank_account(self):
         account = self._create_account(amount=100)
 
         account.withdraw(100)
 
-        self.assertEqual(account.get_balance(), 0)
+        self.assertEqual(account.balance, 0)
 
     def test_can_withdraw_money_sequentially(self):
         account = self._create_account(amount=100)
@@ -47,7 +47,7 @@ class BankAccountTest(unittest.TestCase):
         account.withdraw(20)
         account.withdraw(70)
 
-        self.assertEqual(account.get_balance(), 10)
+        self.assertEqual(account.balance, 10)
 
     def test_checking_balance_of_closed_account_throws_error(self):
         account = BankAccount()
@@ -56,7 +56,7 @@ class BankAccountTest(unittest.TestCase):
         account.close()
 
         with self.assertRaisesWithMessage(ValueError):
-            account.get_balance()
+            account.balance
 
     def test_deposit_into_closed_account_raises(self):
         account = BankAccount()
@@ -93,7 +93,7 @@ class BankAccountTest(unittest.TestCase):
 
         account.open()
 
-        self.assertEqual(account.get_balance(), 0)
+        self.assertEqual(account.balance, 0)
 
     def test_cannot_withdraw_more_than_deposited(self):
         account = self._create_account(amount=25)
@@ -119,14 +119,14 @@ class BankAccountTest(unittest.TestCase):
 
         self._adjust_balance_concurrently(account)
 
-        self.assertEqual(account.get_balance(), 100)
+        self.assertEqual(account.balance, 100)
 
     def test_can_handle_initial_dollar_amount(self):
         account = BankAccount()
 
         account.open(amount=50)
 
-        self.assertEqual(account.get_balance(), 50)
+        self.assertEqual(account.balance, 50)
 
     def test_able_to_open_account_with_minimum_required_balance(self):
         account = BankAccount(minimum_balance=100)
