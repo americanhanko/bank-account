@@ -14,7 +14,8 @@ class BankAccount:
     def minimum_balance(self):
         return self._minimum_balance
 
-    def get_balance(self):
+    @property
+    def balance(self):
         self._require_opened()
         return self._balance
 
